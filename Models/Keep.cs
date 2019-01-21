@@ -7,7 +7,6 @@ namespace keepr.Models
 {
   public class Keep
   {
-    [Required]
     public int Id { get; set; }
     [Required]
     public string Name { get; set; }
