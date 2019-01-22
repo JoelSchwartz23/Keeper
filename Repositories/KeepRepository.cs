@@ -16,18 +16,18 @@ namespace keepr.Repositories
     }
     public IEnumerable<Keep> GetAll()
     {
-      return _db.Query<Keep>("SELECT * FROM keeps");
+      return _db.Query<Keep>("SELECT * FROM keeps WHERE isPrivate = false");
     }
 
-    public Keep GetKeepById(int id)
+    public IEnumerable<Keep> GetByUserId(string id)
     {
-      return _db.QueryFirstOrDefault<Keep>($"SELECT * FROM keeps WHERE id = @id", new { id });
+      return _db.Query<Keep>($"SELECT * FROM keeps WHERE userId = @id", new { id });
     }
 
-    public Keep AddKeep(Keep newkeep)
+    public Keep NewKeep(Keep newkeep)
     {
       int id = _db.ExecuteScalar<int>(@"
- 	  INSERT INTO keeps(Name, Description, IsPrivate, UserId, Img) Values(@Name, @Description, @IsPrivate, @UserId, @Img);
+ 	  INSERT INTO keeps(name, description, isPrivate, userId, img) Values(@Name, @Description, @IsPrivate, @UserId, @Img);
  	  SELECT LAST_INSERT_ID();", newkeep);
       newkeep.Id = id;
       return newkeep;
@@ -55,15 +55,12 @@ namespace keepr.Repositories
 
 
 
-    public bool DeleteKeep(int id)
+    public bool DeleteKeep(string keepId, string userId)
     {
-      int success = _db.Execute("DELETE FROM keeps WHERE id = @id", new { id });
-      if (success == 0)
-      {
-        return false;
-      }
-      return true;
-    }
 
+      int success = _db.Execute(@"DELETE FROM keeps WHERE id = @keepId && userId = @userId", new { keepId, userId });
+      return success != 0;
+
+    }
   }
 }

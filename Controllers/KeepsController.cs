@@ -5,9 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using keepr.Models;
 using keepr.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Keepr.Controllers
+namespace keepr.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
@@ -21,33 +22,36 @@ namespace Keepr.Controllers
     }
     // GET api/Keeps
     [HttpGet]
-    public ActionResult<IEnumerable<Keep>> Get()
+    public ActionResult<IEnumerable<Keep>> GetAll()
     {
       return Ok(_keepRepo.GetAll());
     }
 
     // GET api/Keeps/1
-    [HttpGet("{id}")]
-    public ActionResult<Keep> Get(int id)
+    [Authorize]
+    [HttpGet("user")]
+    public IEnumerable<Keep> Get()
     {
-      Keep result = _keepRepo.GetKeepById(id);
-      if (result != null)
-      {
-        return Ok(result);
-      }
-      return BadRequest();
+      string uid = HttpContext.User.Identity.Name;
+      return _keepRepo.GetByUserId(uid);
     }
 
     // POST api/Keeps
+    [Authorize]
     [HttpPost]
     public ActionResult<Keep> Post([FromBody] Keep keep)
     {
-      Keep result = _keepRepo.AddKeep(keep);
-      return Created("/api/keeps/" + result.Id, result);
+      keep.UserId = HttpContext.User.Identity.Name;
+      if (keep.UserId != null)
+      {
+        Keep result = _keepRepo.NewKeep(keep);
+        return Created("/api/keeps/" + result.Id, result);
+      }
+      return Unauthorized("Login to create keep");
     }
 
     // PUT api/Keeps/1
-    [HttpPut("{id}")]
+    [HttpPut("{keepid}")]
     public ActionResult<Keep> Put(int id, [FromBody] Keep keep)
     {
       if (keep.Id == 0)
@@ -63,14 +67,17 @@ namespace Keepr.Controllers
     }
 
     // DELETE api/Keeps/1
-    [HttpDelete("{id}")]
-    public ActionResult<Keep> Delete(int id)
+    [Authorize]
+    [HttpDelete("{keepid}")]
+    public ActionResult<Keep> Delete(string keepId)
     {
-      if (_keepRepo.DeleteKeep(id))
+      string uid = HttpContext.User.Identity.Name;
+      if (uid != null)
       {
+        _keepRepo.DeleteKeep(keepId, uid);
         return Ok("Successfully deleted keep");
       }
-      return BadRequest("No  to delete");
+      return BadRequest("No keep to delete");
     }
   }
 }

@@ -24,7 +24,7 @@ namespace keepr.Repositories
       return _db.QueryFirstOrDefault<Vault>($"SELECT * FROM vaults WHERE id = @id", new { id });
     }
 
-    public Vault AddVault(Vault newvault)
+    public Vault NewVault(Vault newvault)
     {
       int id = _db.ExecuteScalar<int>(@"
  	  INSERT INTO vaults(Name, Description, UserId) Values(@Name, @Description, @UserId);
@@ -55,14 +55,11 @@ namespace keepr.Repositories
 
 
 
-    public bool DeleteVault(int id)
+    public bool DeleteVault(string vaultId, string userId)
     {
-      int success = _db.Execute("DELETE FROM vaults WHERE id = @id", new { id });
-      if (success == 0)
-      {
-        return false;
-      }
-      return true;
+
+      int success = _db.Execute(@"DELETE FROM vaults WHERE id = @vaultId && userId = @userId", new { vaultId, userId });
+      return success != 0;
     }
 
   }
