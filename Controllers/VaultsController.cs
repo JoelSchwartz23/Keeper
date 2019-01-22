@@ -20,15 +20,16 @@ namespace keepr.Controllers
     {
       _vaultRepo = vaultRepo;
     }
-    // GET api/Vaults
-    [HttpGet]
-    public ActionResult<IEnumerable<Vault>> Get()
-    {
-      return Ok(_vaultRepo.GetAll());
-    }
 
     // GET api/Vaults/1
-    [HttpGet("{vaultid}")]
+    [HttpGet]
+    public IEnumerable<Vault> GetByUserId()
+    {
+      string uid = HttpContext.User.Identity.Name;
+      return _vaultRepo.GetByUserId(uid);
+    }
+
+    [HttpGet("{id}")] //GET A SINGLE VAULT
     public ActionResult<Vault> Get(int id)
     {
       Vault result = _vaultRepo.GetVaultById(id);
@@ -51,22 +52,6 @@ namespace keepr.Controllers
         return Created("/api/vaults/" + result.Id, result);
       }
       return Unauthorized("Login to create vault");
-    }
-
-    // PUT api/Vaults/1
-    [HttpPut("{vaultid}")]
-    public ActionResult<Vault> Put(int id, [FromBody] Vault vault)
-    {
-      if (vault.Id == 0)
-      {
-        vault.Id = id;
-      }
-      Vault result = _vaultRepo.EditVault(id, vault);
-      if (result != null)
-      {
-        return result;
-      }
-      return NotFound();
     }
 
     // DELETE api/Vaults/1

@@ -16,7 +16,7 @@ namespace keepr.Repositories
     }
     public IEnumerable<Keep> GetAll()
     {
-      return _db.Query<Keep>("SELECT * FROM keeps WHERE isPrivate = false");
+      return _db.Query<Keep>($"SELECT * FROM keeps WHERE isPrivate = false");
     }
 
     public IEnumerable<Keep> GetByUserId(string id)
@@ -33,27 +33,20 @@ namespace keepr.Repositories
       return newkeep;
     }
 
-    public Keep EditKeep(int id, Keep newkeep)
+    public Keep EditKeep(Keep newkeep)
     {
-      try
-      {
-        return _db.QueryFirstOrDefault<Keep>($@"
+      _db.Execute($@"
           UPDATE keeps SET
-          Name= @Name,
-          Description = @Description,
-          Img = @Img
-          WHERE Id = @Id;
-          SELECT * FROM keeps WHERE id = @Id;
+          name= @Name,
+          description = @Description,
+          isPrivate = @IsPrivate,
+          img = @Img,
+          keeps=@keeps,
+          views=@views
+         WHERE id = @Id AND userId =@userId;
         ", newkeep);
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine(ex);
-        return null;
-      }
+      return newkeep;
     }
-
-
 
     public bool DeleteKeep(string keepId, string userId)
     {

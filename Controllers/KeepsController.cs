@@ -51,19 +51,13 @@ namespace keepr.Controllers
     }
 
     // PUT api/Keeps/1
+    [Authorize]
     [HttpPut("{keepid}")]
-    public ActionResult<Keep> Put(int id, [FromBody] Keep keep)
+    public Keep Put(int keepId, [FromBody] Keep keep)
     {
-      if (keep.Id == 0)
-      {
-        keep.Id = id;
-      }
-      Keep result = _keepRepo.EditKeep(id, keep);
-      if (result != null)
-      {
-        return result;
-      }
-      return NotFound();
+      keep.Id = keepId;
+      keep.UserId = HttpContext.User.Identity.Name;
+      return _keepRepo.EditKeep(keep);
     }
 
     // DELETE api/Keeps/1
