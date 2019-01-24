@@ -23,6 +23,7 @@ export default new Vuex.Store({
     publickeeps: [],
     userkeeps: [],
     vaults: [],
+    vaultkeep: [],
     activevault: 0
   },
   mutations: {
@@ -38,9 +39,13 @@ export default new Vuex.Store({
     setVaults(state, uservaults) {
       state.vaults = uservaults
     },
-    SetActiveVault(state, vaultId) {
+    setActiveVault(state, vaultId) {
       state.activevault = vaultId
+    },
+    setVaultKeep(state, vaultkeep) {
+      state.vaultkeep = vaultkeep
     }
+
   },
   actions: {
     register({ commit, dispatch }, newUser) {
@@ -135,28 +140,27 @@ export default new Vuex.Store({
           console.log('Cannot retrieve vaults')
         })
     },
-    activeVault({ commit, dispatch }, vaultId) {
-      api.get('vaults/' + vaultId)
-        .then(res => {
-          let vault = res.data
-          api.get('vaultkeeps/' + vaultId)
-            .then(res => {
-              vault.keeps = res.data
-              commit("setActiveVault", vaultId)
-            })
-        })
-        .catch(e => {
-          console.log('Cannot retrieve vaults')
-        })
-    },
     addVault({ commit, dispatch }, vault) {
       api.post('vaults', vault)
         .then(res => {
-          dispatch("getUserVaults")
+          dispatch("getVaults")
         })
         .catch(e => {
           console.log('Cannot add vaults')
         })
-    }
+    },
+    getVaultKeep({ commit, dispatch }, vaultId) {
+      api.get('VaultKeeps/' + vaultId)
+        .then(res => {
+          commit("setVaultKeep", res.data)
+          commit("setActiveVault", vaultId)
+          router.push('/vault')
+        })
+        .catch(e => {
+          debugger
+          console.log("cannot get vaultkeep")
+        })
+    },
+
   }
 })

@@ -8,6 +8,7 @@
             <h4>{{keep.name}}</h4>
             <img class="card-img" :src="keep.img" alt="card img">
             <i class="fas fa-eye"> Views: {{keep.views}}</i>
+            <i class="fab fa-jenkins"> Kept:{{keep.keeps}}</i>
             <button type="button" class="btn" data-toggle="modal" data-target="#addtovault">
               add to vault
             </button>
@@ -109,5 +110,9 @@
     display: flex;
     align-content: flex-end;
     flex-wrap: wrap;
+  }
+
+  .fa-jenkins {
+    font-size: 20px;
   }
 </style>

@@ -5,14 +5,14 @@
         <h1>Welcome to your profile {{User.username}}</h1>
       </div>
       <div class="row">
-        <div class="col-12 card" v-for="vault in getVaults">
-          <h4>{{vault.description}}</h4>
+        <div class="col-12 d-flex justify-content-start" v-for="vault in getVaults">
+          <button @click="getVaultKeep(vault.id)" class="btn">{{vault.description}}</button>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addkeep">
-            create keep
+            Create Keep
           </button>
           <!-- ADD KEEP MODAL -->
           <div class="modal fade" id="addkeep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -32,6 +32,34 @@
                     <div><input type="text" placeholder="Image Url" v-model="addKeep.img"></div>
                     <div><input type="checkbox" v-model="addKeep.isPrivate">Private</div>
                     <button type="submit" class="btn btn-primary">Create Keep</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addvault">
+            Create Vault
+          </button>
+          <!-- ADD Vault Modal -->
+          <div class="modal fade" id="addvault" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Create a Vault</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form @submit.prevent="createVault()">
+                    <div><input type="text" placeholder="Name" v-model="addVault.name"></div>
+                    <div><input type="text" placeholder="Description" v-model="addVault.description"></div>
+                    <button type="submit" class="btn btn-primary">Create Vault</button>
                   </form>
                 </div>
               </div>
@@ -92,6 +120,10 @@
           description: "",
           img: "",
           isPrivate: 0
+        },
+        addVault: {
+          name: "",
+          description: ""
         }
       }
     },
@@ -121,6 +153,9 @@
       createKeep() {
         this.$store.dispatch('addKeep', this.addKeep);
       },
+      createVault() {
+        this.$store.dispatch('addVault', this.addVault);
+      },
       deleteKeep(id) {
         this.$store.dispatch('deleteKeep', id)
       },
@@ -132,6 +167,9 @@
         keep.keeps++
         this.$store.dispatch('updateUserKeep', keep)
       },
+      getVaultKeep(vaultId) {
+        this.$store.dispatch("getVaultKeep", vaultId)
+      }
     }
   }
 </script>

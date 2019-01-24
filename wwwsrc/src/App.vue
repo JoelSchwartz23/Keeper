@@ -2,6 +2,7 @@
   <div id="app">
     <nav class="navbar navbar-dark bg-dark container-fluid">
       <!-- Navbar content -->
+      <h1 class="d-flex justify-content-start">Keeper</h1>
       <div class="col-12 nav-style">
         <router-link class="nav-style" to='/home'>Home</router-link>
         <router-link class="nav-style" to="/profile">Profile</router-link>
