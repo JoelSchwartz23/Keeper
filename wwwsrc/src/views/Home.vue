@@ -51,9 +51,9 @@
 <style>
   .card {
     max-width: 16rem;
-    box-shadow: 0px 0px 2px grey;
+    box-shadow: 0px 0px 2px black;
     transition: .5s linear;
-    background-color: black;
+    background-color: grey;
   }
 
   .card:hover {

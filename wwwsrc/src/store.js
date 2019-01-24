@@ -22,7 +22,8 @@ export default new Vuex.Store({
     user: {},
     publickeeps: [],
     privatekeeps: [],
-    vaults: []
+    vaults: [],
+    activevault: 0
   },
   mutations: {
     setUser(state, user) {
@@ -30,6 +31,15 @@ export default new Vuex.Store({
     },
     setPublicKeeps(state, keeps) {
       state.publickeeps = keeps
+    },
+    setPrivateKeeps(state, userkeeps) {
+      state.privatekeeps = userkeeps
+    },
+    setVaults(state, uservaults) {
+      state.vaults = uservaults
+    },
+    SetActiveVault(state, vaultId) {
+      state.activevault = vaultId
     }
   },
   actions: {
@@ -77,6 +87,38 @@ export default new Vuex.Store({
         })
         .catch(e => {
           console.log('Cannot retrieve public keeps')
+        })
+    },
+    getPrivateKeeps({ commit, dispatch }) {
+      api.get('keeps/user')
+        .then(res => {
+          commit('setPrivateKeeps', res.data)
+        })
+        .catch(e => {
+          console.log('Cannot retrieve private keeps')
+        })
+    },
+    getVaults({ commit, dispatch }) {
+      api.get('vaults')
+        .then(res => {
+          commit('setVaults', res.data)
+        })
+        .catch(e => {
+          console.log('Cannot retrieve vaults')
+        })
+    },
+    activeVault({ commit, dispatch }, vaultId) {
+      api.get('vaults/' + vaultId)
+        .then(res => {
+          let vault = res.data
+          api.get('vaultkeeps/' + vaultId)
+            .then(res => {
+              vault.keeps = res.data
+              commit("setActiveVault", vaultId)
+            })
+        })
+        .catch(e => {
+          console.log('Cannot retrieve vaults')
         })
     }
   }

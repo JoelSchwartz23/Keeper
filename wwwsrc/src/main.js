@@ -11,5 +11,8 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
+  created() {
+    this.$store.dispatch('authenticate')
+  },
   render: h => h(App)
 }).$mount('#app')

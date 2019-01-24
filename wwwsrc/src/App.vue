@@ -42,7 +42,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
+    color: orange;
+  }
+
+  body {
+    background-image: linear-gradient(to right, black, purple);
+    height: 100%;
   }
 
   #nav {
