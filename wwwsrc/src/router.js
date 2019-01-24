@@ -6,6 +6,8 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 // @ts-ignore
 import Profile from './views/Profile.vue'
+// @ts-ignore
+import Vault from './views/Vault.vue'
 
 Vue.use(Router)
 
@@ -25,18 +27,13 @@ let router = new Router({
       path: '/profile',
       name: 'profile',
       component: Profile
+    },
+    {
+      path: '/vault',
+      name: 'vault',
+      component: Vault
     }
   ]
 })
-// router.beforeEach((to, from, next) => {
-//   // to and from are both route objects
-//   if (to.path == '/login' || to.path == '/register') {
-//     next()
-//   } else if (to.matched.length == 0) {
-//     next("/")
-//   } else {
-//     next()
-//   }
-// })
 
 export default router

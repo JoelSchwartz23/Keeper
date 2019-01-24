@@ -99,8 +99,8 @@ export default new Vuex.Store({
           console.log('Cannot retrieve user keeps')
         })
     },
-    updateUserKeep({ commit, dispatch }, id) {
-      api.put('keeps/' + id)
+    updateUserKeep({ commit, dispatch }, keep) {
+      api.put('keeps/' + keep.id, keep)
         .then(res => {
           dispatch('getUserKeeps')
         })
@@ -108,7 +108,7 @@ export default new Vuex.Store({
           console.log('Cannot update keep')
         })
     },
-    postKeep({ commit, dispatch }, keep) {
+    addKeep({ commit, dispatch }, keep) {
       api.post('keeps', keep)
         .then(res => {
           dispatch('getUserKeeps', res.data)
@@ -117,16 +117,6 @@ export default new Vuex.Store({
           console.log('Cannot create keep')
         })
     },
-    // updatePublicKeep({ commit, dispatch }, id) {
-    //   debugger
-    //   api.put('keeps/' + id)
-    //     .then(res => {
-    //       dispatch('getUserKeeps')
-    //     })
-    //     .catch(e => {
-    //       console.log('Cannot update keep')
-    //     })
-    // },
     deleteKeep({ commit, dispatch }, id) {
       api.delete('keeps/' + id)
         .then(res => {
@@ -157,6 +147,15 @@ export default new Vuex.Store({
         })
         .catch(e => {
           console.log('Cannot retrieve vaults')
+        })
+    },
+    addVault({ commit, dispatch }, vault) {
+      api.post('vaults', vault)
+        .then(res => {
+          dispatch("getUserVaults")
+        })
+        .catch(e => {
+          console.log('Cannot add vaults')
         })
     }
   }

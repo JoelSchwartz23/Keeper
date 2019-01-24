@@ -11,7 +11,7 @@
             <button type="button" class="btn" data-toggle="modal" data-target="#addtovault">
               add to vault
             </button>
-            <button type="button" class="btn" data-toggle="modal" @click="updateUserKeep(keep.views ++)" :data-target="'#'+keep.id">
+            <button type="button" class="btn" data-toggle="modal" @click="addView(keep.views ++)" :data-target="'#'+keep.id">
               View Keep
             </button>
             <!-- VIEWING A SINGLE KEEP -->
@@ -72,10 +72,11 @@
       logout() {
         this.$store.dispatch("logout")
       },
-      updateUserKeep(id) {
-        debugger
+      addView(id) {
+        keep.views++
         this.$store.dispatch('updateUserKeep', id)
       },
+
     }
   }
 </script>
