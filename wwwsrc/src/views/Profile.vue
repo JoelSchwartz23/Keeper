@@ -3,16 +3,80 @@
     <h1>Welcome to your profile {{User.username}}</h1>
     <div class="container-fluid">
       <div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addkeep">
+            create keep
+          </button>
+          <!-- ADD KEEP MODAL -->
+          <div class="modal fade" id="addkeep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Create a keep</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form @submit.prevent="createKeep()">
+                    <div><input type="text" placeholder="Name" v-model="postKeep.name"></div>
+                    <div><input type="text" placeholder="Description" v-model="postKeep.description"></div>
+                    <div><input type="text" placeholder="Image Url" v-model="postKeep.img"></div>
+                    <div><input type="checkbox" v-model="postKeep.isPrivate">Private</div>
+                    <button type="submit" class="btn btn-primary">Create Keep</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 card" v-for="vault in getVaults">
+          <h4>{{vault.description}}</h4>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-12 keeps">
-          <div class="card" v-for="keep in getPrivateKeeps">
+          <div class="card" v-for="keep in getUserKeeps">
             <h4>{{keep.name}}</h4>
             <img class="card-img" :src="keep.img" alt="card img">
             <i class="fas fa-eye"> Views: {{keep.views}}</i>
-
+            <button type="button" class="btn" data-toggle="modal" data-target="#addtovault">
+              add to vault
+            </button>
+            <button type="button" class="btn" data-toggle="modal" @click="updateUserKeep(keep.views++, keep.id)"
+              :data-target="'#'+keep.id">
+              View Keep
+            </button>
+            <!-- VIEWING A SINGLE KEEP -->
+            <div class="modal fade" :id="keep.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{keep.name}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <img class="img-responsive" :src="keep.img" style="max-height:250px" alt=" keep">
+                  </div>
+                  {{keep.description}}
+                  <i class="fas fa-eye"> Views: {{keep.views}}</i>
+                  <div class="modal-footer">
+                    <button type="button" @click="deleteKeep(keep.id)" class="btn btn-danger">delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -25,17 +89,23 @@
       if (!this.$store.state.user.id) {
         this.$router.push({ name: "login" });
       }
-      this.$store.dispatch("getPrivateKeeps");
+      this.$store.dispatch("getUserKeeps");
       this.$store.dispatch("getVaults");
     },
 
     data() {
       return {
+        postKeep: {
+          name: "",
+          description: "",
+          img: "",
+          isPrivate: 0
+        }
       }
     },
     computed: {
-      getPrivateKeeps() {
-        return this.$store.state.privatekeeps
+      getUserKeeps() {
+        return this.$store.state.userkeeps
       },
       getVaults() {
         return this.$store.state.vaults
@@ -47,7 +117,17 @@
     methods: {
       logout() {
         this.$store.dispatch("logout")
-      }
+      },
+      createKeep() {
+        this.$store.dispatch('postKeep', this.postKeep);
+      },
+      deleteKeep(id) {
+        this.$store.dispatch('deleteKeep', id)
+      },
+      updateUserKeep(views, id) {
+        debugger
+        this.$store.dispatch('updateUserKeep', views, id)
+      },
     }
   }
 </script>

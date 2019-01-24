@@ -2,14 +2,10 @@
   <div id="app">
     <nav class="navbar navbar-dark bg-dark container-fluid">
       <!-- Navbar content -->
-      <div class="col-4">
-        <router-link to='/home'>Home</router-link>
-      </div>
-      <div class="col-4">
-        <router-link class="home-font" to="/profile">Profile</router-link>
-      </div>
-      <div class="col-4">
-        <router-link @click.native='logout()' to="/login">Logout</router-link>
+      <div class="col-12 nav-style">
+        <router-link class="nav-style" to='/home'>Home</router-link>
+        <router-link class="nav-style" to="/profile">Profile</router-link>
+        <router-link class="nav-style" @click.native='logout()' to="/login">Logout</router-link>
       </div>
     </nav>
     <router-view />
@@ -48,6 +44,14 @@
   body {
     background-image: linear-gradient(to right, black, purple);
     height: 100%;
+  }
+
+  .nav-style {
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+    margin-left: 10px;
+    font-size: 20px;
   }
 
   #nav {

@@ -21,7 +21,7 @@ export default new Vuex.Store({
   state: {
     user: {},
     publickeeps: [],
-    privatekeeps: [],
+    userkeeps: [],
     vaults: [],
     activevault: 0
   },
@@ -32,8 +32,8 @@ export default new Vuex.Store({
     setPublicKeeps(state, keeps) {
       state.publickeeps = keeps
     },
-    setPrivateKeeps(state, userkeeps) {
-      state.privatekeeps = userkeeps
+    setUserKeeps(state, userkeeps) {
+      state.userkeeps = userkeeps
     },
     setVaults(state, uservaults) {
       state.vaults = uservaults
@@ -61,6 +61,7 @@ export default new Vuex.Store({
         })
         .catch(e => {
           console.log('not authenticated')
+          router.push({ name: 'login' })
         })
     },
     login({ commit, dispatch }, creds) {
@@ -89,13 +90,50 @@ export default new Vuex.Store({
           console.log('Cannot retrieve public keeps')
         })
     },
-    getPrivateKeeps({ commit, dispatch }) {
+    getUserKeeps({ commit, dispatch }) {
       api.get('keeps/user')
         .then(res => {
-          commit('setPrivateKeeps', res.data)
+          commit('setUserKeeps', res.data)
         })
         .catch(e => {
-          console.log('Cannot retrieve private keeps')
+          console.log('Cannot retrieve user keeps')
+        })
+    },
+    updateUserKeep({ commit, dispatch }, id) {
+      api.put('keeps/' + id)
+        .then(res => {
+          dispatch('getUserKeeps')
+        })
+        .catch(e => {
+          console.log('Cannot update keep')
+        })
+    },
+    postKeep({ commit, dispatch }, keep) {
+      api.post('keeps', keep)
+        .then(res => {
+          dispatch('getUserKeeps', res.data)
+        })
+        .catch(e => {
+          console.log('Cannot create keep')
+        })
+    },
+    // updatePublicKeep({ commit, dispatch }, id) {
+    //   debugger
+    //   api.put('keeps/' + id)
+    //     .then(res => {
+    //       dispatch('getUserKeeps')
+    //     })
+    //     .catch(e => {
+    //       console.log('Cannot update keep')
+    //     })
+    // },
+    deleteKeep({ commit, dispatch }, id) {
+      api.delete('keeps/' + id)
+        .then(res => {
+          dispatch('getUserKeeps')
+        })
+        .catch(e => {
+          console.log('Cannot update keep')
         })
     },
     getVaults({ commit, dispatch }) {
