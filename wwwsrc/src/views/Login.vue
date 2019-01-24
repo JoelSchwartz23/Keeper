@@ -15,6 +15,16 @@
             <p v-if="loginForm">No account Click to Register</p>
             <p v-else>Already have an account click to Login</p>
         </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div v-for="keep in getPublicKeeps">
+                    <div class="card">
+                        <img class="card-img" :src="keep.img" alt="card img">
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -45,6 +55,11 @@
             },
             loginUser() {
                 this.$store.dispatch("login", this.creds);
+            }
+        },
+        computed: {
+            getPublicKeeps() {
+                return this.$store.state.publickeeps
             }
         }
     };

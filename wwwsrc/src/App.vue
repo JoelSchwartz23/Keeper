@@ -1,6 +1,11 @@
 <template>
   <div id="app">
+    <nav class="navbar navbar-dark bg-dark container-fluid">
+      <!-- Navbar content -->
+      <router-link :to="{name: 'home'}">Home</router-link>
+    </nav>
     <router-view />
+
   </div>
 </template>
 
@@ -10,6 +15,11 @@
     mounted() {
       //checks for valid session
       this.$store.dispatch("authenticate");
+    },
+    computed: {
+      getUser() {
+        return this.$store.state.user
+      }
     },
   }
 </script>
