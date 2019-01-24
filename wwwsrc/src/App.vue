@@ -2,10 +2,17 @@
   <div id="app">
     <nav class="navbar navbar-dark bg-dark container-fluid">
       <!-- Navbar content -->
-      <router-link :to="{name: 'home'}">Home</router-link>
+      <div class="col-4">
+        <router-link to='/home'>Home</router-link>
+      </div>
+      <div class="col-4">
+        <router-link class="home-font" to="/profile">Profile</router-link>
+      </div>
+      <div class="col-4">
+        <router-link @click.native='logout()' to="/login">Logout</router-link>
+      </div>
     </nav>
     <router-view />
-
   </div>
 </template>
 
@@ -21,6 +28,11 @@
         return this.$store.state.user
       }
     },
+    methods: {
+      logout() {
+        this.$store.dispatch("logout")
+      }
+    }
   }
 </script>
 

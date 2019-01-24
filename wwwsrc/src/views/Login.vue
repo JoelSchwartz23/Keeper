@@ -17,9 +17,11 @@
         </div>
         <div class="container-fluid">
             <div class="row">
-                <div v-for="keep in getPublicKeeps">
-                    <div class="card">
+                <div class="col-12 keeps">
+                    <div class="card" v-for="keep in getPublicKeeps">
+                        <h4>{{keep.name}}</h4>
                         <img class="card-img" :src="keep.img" alt="card img">
+                        <i class="fas fa-eye"> Views: {{keep.views}}</i>
 
                     </div>
                 </div>
@@ -34,6 +36,7 @@
         mounted() {
             //checks for valid session
             this.$store.dispatch("authenticate");
+            this.$store.dispatch("getPublicKeeps");
         },
         data() {
             return {
