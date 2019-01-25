@@ -5,8 +5,9 @@
         <h1>Welcome to your profile {{User.username}}</h1>
       </div>
       <div class="row">
-        <div class="col-12 d-flex justify-content-start" v-for="vault in getVaults">
+        <div class="col-12 vault" v-for="vault in getVaults">
           <button @click="getVaultKeep(vault.id)" class="btn">{{vault.description}}</button>
+          <button type="button" @click="deleteVault(vault.id)" class="btn btn-danger">delete vault</button>
         </div>
       </div>
       <div class="row">
@@ -169,11 +170,17 @@
       },
       getVaultKeep(vaultId) {
         this.$store.dispatch("getVaultKeep", vaultId)
-      }
+      },
+      deleteVault(id) {
+        this.$store.dispatch('deleteVault', id)
+      },
     }
   }
 </script>
 
 <style>
-
+  .vault {
+    display: flex;
+    justify-content: space-around;
+  }
 </style>

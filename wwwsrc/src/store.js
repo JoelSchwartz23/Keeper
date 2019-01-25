@@ -128,7 +128,7 @@ export default new Vuex.Store({
           dispatch('getUserKeeps')
         })
         .catch(e => {
-          console.log('Cannot update keep')
+          console.log('Cannot delete keep')
         })
     },
     getVaults({ commit, dispatch }) {
@@ -147,6 +147,15 @@ export default new Vuex.Store({
         })
         .catch(e => {
           console.log('Cannot add vaults')
+        })
+    },
+    deleteVault({ commit, dispatch }, id) {
+      api.delete('vaults/' + id)
+        .then(res => {
+          dispatch('getVaults')
+        })
+        .catch(e => {
+          console.log('Cannot delete vault')
         })
     },
     getVaultKeep({ commit, dispatch }, vaultId) {
