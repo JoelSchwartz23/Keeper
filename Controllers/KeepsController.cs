@@ -51,7 +51,7 @@ namespace keepr.Controllers
     }
 
     // PUT api/Keeps/1
-    [Authorize]
+    // [Authorize]
     [HttpPut("{keepid}")]
     public Keep Put(int keepId, [FromBody] Keep keep)
     {

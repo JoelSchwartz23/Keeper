@@ -2,19 +2,23 @@
   <div>
     <div>
       <div class="container-fluid">
-        <h1>Welcome to your profile {{User.username}}</h1>
+        <h1>Welcome to Your Profile {{User.username}}</h1>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addvault">
+          Create Vault
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addkeep">
+          Create Keep
+        </button>
       </div>
       <div class="row">
-        <div class="col-12 vault" v-for="vault in getVaults">
+        <h1 class="mx-4">Your Vaults</h1>
+        <div class=" col-12 vault" v-for="vault in getVaults">
           <button @click="getVaultKeep(vault.id)" class="btn">{{vault.description}}</button>
-          <button type="button" @click="deleteVault(vault.id)" class="btn btn-danger">delete vault</button>
+          <i @click="deleteVault(vault.id)" class="fas fa-trash-alt mt-4"></i>
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addkeep">
-            Create Keep
-          </button>
           <!-- ADD KEEP MODAL -->
           <div class="modal fade" id="addkeep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -42,9 +46,6 @@
       </div>
       <div class="row">
         <div class="col-12">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addvault">
-            Create Vault
-          </button>
           <!-- ADD Vault Modal -->
           <div class="modal fade" id="addvault" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -70,18 +71,17 @@
       </div>
     </div>
     <div class="row">
+      <h1 class="mx-4">Your Keeps</h1>
       <div class="col-12 keeps">
         <div class="card" v-for="keep in getUserKeeps">
           <h4>{{keep.name}}</h4>
           <img class="card-img" :src="keep.img" alt="card img">
           <i class="fas fa-eye"> Views: {{keep.views}}</i>
-          <button type="button" class="btn" data-toggle="modal" @click="addtoKeeps(keep)" data-target="#addtovault">
-            add to vault
-          </button>
+          <i class="fab fa-jenkins"> Keeps:{{keep.keeps}}</i>
           <button type="button" class="btn" data-toggle="modal" @click="addView(keep)" :data-target="'#'+keep.id">
             View Keep
           </button>
-          <!-- VIEWING A SINGLE KEEP -->
+          <!-- - Add to Vault/View a Keep --->
           <div class="modal fade" :id="keep.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -96,10 +96,11 @@
                   <img class="img-responsive" :src="keep.img" style="max-height:250px" alt=" keep">
                 </div>
                 {{keep.description}}
-                <i class="fas fa-eye"> Views: {{keep.views}}</i>
-                <div class="modal-footer">
-                  <button type="button" @click="deleteKeep(keep.id)" class="btn btn-danger">delete</button>
+                <h4>Click to add to Vault</h4>
+                <div class="modal-footer d-flex justify-content-center" v-for="vault in getVaults">
+                  <button data-dismiss="modal" @click="addKeepToVault(vault.id, keep.id);addtoKeeps(keep)" class="btn">{{vault.description}}</button>
                 </div>
+                <button data-dismiss="modal" type="button" @click="deleteKeep(keep.id)" class="btn">delete</button>
               </div>
             </div>
           </div>
@@ -125,7 +126,8 @@
         addVault: {
           name: "",
           description: ""
-        }
+        },
+        activeKeep: 0
       }
     },
     mounted() {
@@ -168,6 +170,14 @@
         keep.keeps++
         this.$store.dispatch('updateUserKeep', keep)
       },
+      addKeepToVault(vault, keep) {
+        let payload = {
+          vaultId: vault,
+          keepId: keep,
+          user: this.User.id
+        }
+        this.$store.dispatch('addKeepToVault', payload)
+      },
       getVaultKeep(vaultId) {
         this.$store.dispatch("getVaultKeep", vaultId)
       },
@@ -181,6 +191,22 @@
 <style>
   .vault {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
+  }
+
+  .modal-body {
+    background-image: linear-gradient(to right, black, red);
+  }
+
+  .modal-header {
+    background-image: linear-gradient(to right, black, red);
+  }
+
+  .modal-footer {
+    background-image: linear-gradient(to right, black, red);
+  }
+
+  .modal-content {
+    background-image: linear-gradient(to right, black, red);
   }
 </style>

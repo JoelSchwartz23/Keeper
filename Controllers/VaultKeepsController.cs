@@ -27,7 +27,6 @@ namespace keepr.Controllers
       return _vkrepo.GetVaultKeepById(id);
     }
 
-    [Authorize]
     [HttpPost]
     public ActionResult<VaultKeep> Post([FromBody] VaultKeep vk)
     {

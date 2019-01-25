@@ -2,11 +2,11 @@
   <div id="app">
     <nav class="navbar navbar-dark bg-dark container-fluid">
       <!-- Navbar content -->
-      <h1 class="d-flex justify-content-start">Keeper</h1>
+      <h1 class="d-flex justify-content-start mt-2">Keeper <i class="fas fa-fire"></i></h1>
       <div class="col-12 nav-style">
-        <router-link class="nav-style" to='/home'>Home</router-link>
+        <router-link class="nav-style mb-1" to='/home'>Home</router-link>
         <router-link class="nav-style" to="/profile">Profile</router-link>
-        <router-link class="nav-style" @click.native='logout()' to="/login">Logout</router-link>
+        <router-link v-if="getUser.id" class="nav-style" @click.native='logout()' to="/login">Logout</router-link>
       </div>
     </nav>
     <router-view />
@@ -39,11 +39,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: orange;
+    color: red;
   }
 
   body {
-    background-image: linear-gradient(to right, black, purple);
+    background-image: linear-gradient(to right, black, red);
     height: 100%;
   }
 

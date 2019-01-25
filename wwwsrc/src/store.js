@@ -24,7 +24,8 @@ export default new Vuex.Store({
     userkeeps: [],
     vaults: [],
     vaultkeep: [],
-    activevault: 0
+    activevault: 0,
+    activekeep: 0
   },
   mutations: {
     setUser(state, user) {
@@ -113,6 +114,15 @@ export default new Vuex.Store({
           console.log('Cannot update keep')
         })
     },
+    // updatePublicKeep({ commit, dispatch }, keep) {
+    //   api.put('keeps/' + keep.id, keep)
+    //     .then(res => {
+    //       dispatch('getPublicKeeps')
+    //     })
+    //     .catch(e => {
+    //       console.log('Cannot update keep')
+    //     })
+    // },
     addKeep({ commit, dispatch }, keep) {
       api.post('keeps', keep)
         .then(res => {
@@ -159,17 +169,34 @@ export default new Vuex.Store({
         })
     },
     getVaultKeep({ commit, dispatch }, vaultId) {
-      api.get('VaultKeeps/' + vaultId)
+      api.get('vaultkeeps/' + vaultId)
         .then(res => {
           commit("setVaultKeep", res.data)
           commit("setActiveVault", vaultId)
           router.push('/vault')
         })
         .catch(e => {
-          debugger
           console.log("cannot get vaultkeep")
         })
     },
+    addKeepToVault({ commit, dispatch }, payload) {
+      api.post('vaultkeeps/', payload)
+        .then(res => {
+          dispatch("getVaultKeep", payload.vaultId)
+        })
+        .catch(e => {
+          console.log("cannot add keep to vault")
+        })
+    },
+    removeVaultKeep({ commit, dispatch }, payload) {
+      api.put("vaultkeeps/", payload)
+        .then(res => {
+          dispatch("getVaultKeep", payload.vaultId)
+        })
+        .catch(e => {
+          console.log("cannot remove keep from vault")
+        })
+    }
 
   }
 })

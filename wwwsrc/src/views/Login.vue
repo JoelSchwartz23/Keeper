@@ -21,8 +21,6 @@
                     <div class="card" v-for="keep in getPublicKeeps">
                         <h4>{{keep.name}}</h4>
                         <img class="card-img" :src="keep.img" alt="card img">
-                        <i class="fas fa-eye"> Views: {{keep.views}}</i>
-
                     </div>
                 </div>
             </div>

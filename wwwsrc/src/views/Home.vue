@@ -8,14 +8,11 @@
             <h4>{{keep.name}}</h4>
             <img class="card-img" :src="keep.img" alt="card img">
             <i class="fas fa-eye"> Views: {{keep.views}}</i>
-            <i class="fab fa-jenkins"> Kept:{{keep.keeps}}</i>
-            <button type="button" class="btn" data-toggle="modal" data-target="#addtovault">
-              add to vault
-            </button>
-            <button type="button" class="btn" data-toggle="modal" @click="addView(keep.views ++)" :data-target="'#'+keep.id">
+            <i class="fab fa-jenkins"> Keeps:{{keep.keeps}}</i>
+            <button type="button" class="btn" data-toggle="modal" @click="addView(keep)" :data-target="'#'+keep.id">
               View Keep
             </button>
-            <!-- VIEWING A SINGLE KEEP -->
+            <!-- - Add to Vault/View a Keep --->
             <div class="modal fade" :id="keep.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
               aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -30,8 +27,9 @@
                     <img class="img-responsive" :src="keep.img" style="max-height:250px" alt=" keep">
                   </div>
                   {{keep.description}}
-                  <i class="fas fa-eye"> Views: {{keep.views}}</i>
-                  <div class="modal-footer">
+                  <h4>Click to add to Vault</h4>
+                  <div class="modal-footer d-flex justify-content-center" v-for="vault in getVaults">
+                    <button data-dismiss="modal" @click="addKeepToVault(vault.id, keep.id);addtoKeeps(keep)" class="btn">{{vault.description}}</button>
                   </div>
                 </div>
               </div>
@@ -54,30 +52,45 @@
         this.$router.push({ name: "login" });
       }
       this.$store.dispatch("getPublicKeeps");
+      this.$store.dispatch("getVaults");
     },
 
     data() {
       return {
+        activekeep: 0
       }
     },
     computed: {
       getPublicKeeps() {
         return this.$store.state.publickeeps
       },
-
       User() {
         return this.$store.state.user
-      }
+      },
+      getVaults() {
+        return this.$store.state.vaults
+      },
     },
     methods: {
       logout() {
         this.$store.dispatch("logout")
       },
-      addView(id) {
+      addView(keep) {
         keep.views++
-        this.$store.dispatch('updateUserKeep', id)
+        this.$store.dispatch('updateUserKeep', keep)
       },
-
+      addKeepToVault(vault, keep) {
+        let payload = {
+          vaultId: vault,
+          keepId: keep,
+          user: this.User.id
+        }
+        this.$store.dispatch('addKeepToVault', payload)
+      },
+      addtoKeeps(keep) {
+        keep.keeps++
+        this.$store.dispatch('updateUserKeep', keep)
+      },
     }
   }
 </script>
@@ -100,7 +113,7 @@
   }  */
   .btn {
     cursor: pointer;
-    background-image: linear-gradient(to right, rgb(145, 12, 168), rgb(8, 8, 8));
+    background-image: linear-gradient(to right, black, red);
     color: whitesmoke;
     margin: 10px;
     border: double;
